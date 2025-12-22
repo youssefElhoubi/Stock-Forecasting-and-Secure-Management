@@ -1,8 +1,8 @@
 package com.STFAS.config;
 
-import com.covvee.dto.ErrorResponseDTO;
-import com.covvee.execption.BusinessRuleViolationException;
-import com.covvee.execption.ResourceNotFoundException;
+import com.STFAS.dto.ErrorResponseDTO;
+import com.STFAS.exception.BusinessRuleViolationException;
+import com.STFAS.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
