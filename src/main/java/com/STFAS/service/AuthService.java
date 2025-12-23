@@ -38,7 +38,7 @@ public class AuthService implements Auth {
         String token = jwtUtils.generateToken(authentication);
 
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
-        if (user.getRole()== Role.USER) {
+        if (user.getRole() == Role.USER && dto.getWarehouse() != null) {
             user.setWarehouse(warehouseRepository.findById(dto.getWarehouse()).orElseThrow(() -> new RuntimeException("Warehouse not found")));
         }
 
