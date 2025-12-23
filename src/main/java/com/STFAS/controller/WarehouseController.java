@@ -30,6 +30,10 @@ public class WarehouseController {
     public ResponseEntity<List<WarehouseResponseDto>> all(){
         return ResponseEntity.ok(warehouseService.getAllWarehouses());
     }
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id) {
+        warehouseService.deleteWarehouse(id);
+        return ResponseEntity.ok("warehouse was deleted");
+    }
 
 }
