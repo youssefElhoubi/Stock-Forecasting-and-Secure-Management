@@ -40,12 +40,14 @@ public class WarehouseService implements WarehouseInterface {
 
     @Override
     public WarehouseResponseDto getWarehouseById(String id) {
-        return null;
+        Warehouse warehouse =warehouseRepository.findById(id).orElseThrow(()-> new BusinessRuleViolationException("Warehouse not found"));
+        return warehouseMapper.toDto(warehouse);
     }
 
     @Override
     public List<WarehouseResponseDto> getAllWarehouses() {
-        return List.of();
+        List<Warehouse> warehouses = warehouseRepository.findAll();
+        return warehouses.stream().map(warehouseMapper::toDto).toList();
     }
 
     @Override
