@@ -1,5 +1,6 @@
 package com.STFAS.dto.auth.request;
 
+import com.STFAS.entity.Warehouse;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,6 @@ public class AuthRequestDto {
 
     @NotBlank(message = "Password is required")
     private String password;
+    @Builder.Default
+    private Warehouse warehouse=null;
 }
