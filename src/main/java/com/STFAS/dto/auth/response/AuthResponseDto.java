@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponseDto {
-    private String accessToken; // The JWT Token
     private String id;
     private Role role;
     private String token;
