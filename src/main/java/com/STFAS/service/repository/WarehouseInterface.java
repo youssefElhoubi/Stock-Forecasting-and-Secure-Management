@@ -6,7 +6,7 @@ import com.STFAS.dto.Warehouse.response.WarehouseResponseDto;
 
 import java.util.List;
 
-public interface Warehouse {
+public interface WarehouseInterface {
     WarehouseResponseDto createWarehouse(WarehouseRequestDto request);
     WarehouseResponseDto updateWarehouse(String id, WarehouseUpdateRequest request);
     WarehouseResponseDto getWarehouseById(String id);
