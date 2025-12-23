@@ -21,5 +21,5 @@ public class AuthRequestDto {
     @NotBlank(message = "Password is required")
     private String password;
     @Builder.Default
-    private Warehouse warehouse=null;
+    private String warehouse=null;
 }

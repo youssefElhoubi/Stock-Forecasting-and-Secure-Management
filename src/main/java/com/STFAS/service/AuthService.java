@@ -5,8 +5,10 @@ import com.STFAS.dto.auth.request.SignUpRequestDto;
 import com.STFAS.dto.auth.response.AuthResponseDto;
 import com.STFAS.dto.auth.response.UserInfoDto;
 import com.STFAS.entity.User;
+import com.STFAS.enums.Role;
 import com.STFAS.mapper.UserMapper;
 import com.STFAS.repository.UserRepository;
+import com.STFAS.repository.WarehouseRepository;
 import com.STFAS.security.JwtUtils;
 import com.STFAS.service.repository.Auth;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class AuthService implements Auth {
     private final UserMapper userMapper;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final WarehouseRepository warehouseRepository;
 
     @Override
     public AuthResponseDto login(AuthRequestDto dto) {
@@ -35,6 +38,9 @@ public class AuthService implements Auth {
         String token = jwtUtils.generateToken(authentication);
 
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getRole() == Role.USER && dto.getWarehouse() != null) {
+            user.setWarehouse(warehouseRepository.findById(dto.getWarehouse()).orElseThrow(() -> new RuntimeException("Warehouse not found")));
+        }
 
         AuthResponseDto responseDto = userMapper.toAuthResponseDto(user);
 
