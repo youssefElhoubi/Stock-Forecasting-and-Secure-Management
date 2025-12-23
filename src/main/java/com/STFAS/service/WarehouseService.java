@@ -52,6 +52,6 @@ public class WarehouseService implements WarehouseInterface {
 
     @Override
     public void deleteWarehouse(String id) {
-
+        warehouseRepository.deleteById(id);
     }
 }
