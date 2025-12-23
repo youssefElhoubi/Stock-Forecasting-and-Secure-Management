@@ -30,7 +30,12 @@ public class WarehouseService implements WarehouseInterface {
 
     @Override
     public WarehouseResponseDto updateWarehouse(String id, WarehouseUpdateRequest request) {
-        return null;
+        Warehouse warehouse = warehouseRepository.findById(id).orElseThrow(()-> new BusinessRuleViolationException("Warehouse not found"));
+        warehouse.setName(request.getName());
+        warehouse.setAddress(request.getAddress());
+        warehouse.setCity(request.getCity());
+        warehouseRepository.save(warehouse);
+        return warehouseMapper.toDto(warehouse);
     }
 
     @Override
