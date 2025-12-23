@@ -30,8 +30,8 @@ public class SecurityConfig {
                     corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(java.util.List.of("*"));
                     return corsConfig;
-                })).authorizeHttpRequests(auth ->{
-                    auth.requestMatchers("").permitAll()
+                })).authorizeHttpRequests((auth) ->{
+                    auth.requestMatchers("api/auth/**").permitAll()
                     .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
