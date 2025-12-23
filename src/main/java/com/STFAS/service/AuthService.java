@@ -39,13 +39,19 @@ public class AuthService implements Auth {
         AuthResponseDto responseDto = userMapper.toAuthResponseDto(user);
 
         responseDto.setToken(token);
-        
+
         return responseDto;
     }
 
     @Override
     public AuthResponseDto signup(SignUpRequestDto authRequestDto) {
-        return null;
+        if (userRepository.findByEmail(authRequestDto.getEmail()).isPresent()) {
+            throw new RuntimeException("User with email already exists");
+        }
+        User user = userMapper.toEntity(authRequestDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return userMapper.toAuthResponseDto(user);
     }
 
     @Override
