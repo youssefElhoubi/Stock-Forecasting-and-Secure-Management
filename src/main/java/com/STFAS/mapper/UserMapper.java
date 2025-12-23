@@ -18,6 +18,7 @@ public interface UserMapper {
     // We ignore Role if you want to set it manually in the service
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
+    @Mapping(target="warehouse" , ignore = true)
     User toEntity(SignUpRequestDto registerRequestDto);
 
     // 3. Convert User to AuthResponse (Token is handled separately usually)
