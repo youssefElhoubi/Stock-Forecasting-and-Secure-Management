@@ -2,7 +2,9 @@ spring:
   application:
     name: StockForecastingAndSecureManagement
   mongodb:
-    uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/SFASM}
+    uri: mongodb://root:secret@localhost:27017/SFASM?authSource=admin
 app:
   jwtSecret: ${APP_JWT_SECRET:sqbddsjvqfhjskhlfdskjlhfdlskqgfsldbfhkdskflhsdhklfsqdhkfgqhsdklfhk}
   jwtExpirationMs: 86400000
+server:
+  port: 8082
