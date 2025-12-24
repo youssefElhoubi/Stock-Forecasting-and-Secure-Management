@@ -1,14 +1,28 @@
-services:
-  mongodb:
-    image: 'mongo:latest'
-    env_file:
-      - .env
-    environment:
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-    ports:
-      - "27017"
 version: '3.9'
 
+services:
+  app:
+    build: .
+    container_name: SFASM
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:secret@mongodb:27017/SFASM?authSource=admin
+    depends_on:
+      - mongodb
+    restart: unless-stopped
 
+  mongodb:
+    image: mongo:6.0
+    container_name: SFASM-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: SFASM
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+volumes:
+  mongo-data:
