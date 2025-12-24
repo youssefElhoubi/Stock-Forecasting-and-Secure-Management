@@ -32,6 +32,7 @@ public class SecurityConfig {
                     return corsConfig;
                 })).authorizeHttpRequests((auth) ->{
                     auth.requestMatchers("api/auth/**").permitAll()
+                    .requestMatchers("api/warehouse/**").hasRole("ADMIN")
                     .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
