@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -31,7 +31,7 @@ public class SecurityConfig {
                     corsConfig.setAllowedHeaders(java.util.List.of("*"));
                     return corsConfig;
                 })).authorizeHttpRequests((auth) ->{
-                    auth.requestMatchers("api/auth/**").permitAll()
+                    auth.requestMatchers("/api/auth/**").permitAll()
                     .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
