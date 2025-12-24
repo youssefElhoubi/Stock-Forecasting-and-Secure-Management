@@ -22,7 +22,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain springSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfig = new CorsConfiguration();
@@ -31,8 +31,8 @@ public class SecurityConfig {
                     corsConfig.setAllowedHeaders(java.util.List.of("*"));
                     return corsConfig;
                 })).authorizeHttpRequests((auth) ->{
-                    auth.requestMatchers("api/auth/**").permitAll()
-                    .requestMatchers("api/warehouse/**").hasRole("ADMIN")
+                    auth.requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/warehouse/**").hasRole("ADMIN")
                     .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
