@@ -1,14 +1,16 @@
 package com.STFAS.aop.aspect;
-
 import com.STFAS.aop.interfaces.HaveAccess;
+import com.STFAS.entity.User;
+import com.STFAS.entity.Warehouse;
 import com.STFAS.exception.BusinessRuleViolationException;
+import com.STFAS.exception.ResourceNotFoundException;
+import com.STFAS.repository.UserRepository;
+import com.STFAS.repository.WarehouseRepository;
 import com.STFAS.security.JwtUtils;
-import com.STFAS.service.WarehouseService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.JoinPoint; // Use this, not ProceedingJoinPoint
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -23,37 +25,57 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class RoleCheckAspect {
+
     private final JwtUtils jwtUtils;
-    private final WarehouseService warehouseService;
+    private final WarehouseRepository warehouseRepository;
+    private final UserRepository userRepository; // Renamed from userService (it's a Repo)
 
     @Before("@annotation(haveAccess)")
     public void beforeHaveAccess(JoinPoint joinPoint, HaveAccess haveAccess) {
+        // 1. Validate Token
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new BusinessRuleViolationException("Missing Authorization header");
+        }
         String token = authHeader.substring(7);
         if (!jwtUtils.validateToken(token)) {
             throw new BusinessRuleViolationException("Invalid or expired JWT token");
         }
+
         List<String> userRoles = jwtUtils.extractRoles(token);
         String email = jwtUtils.extractUsername(token);
 
         if (userRoles.contains("ADMIN")) {
             return;
         }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         String paramToCheck = haveAccess.id();
 
-        // Only run this if the user put a param name in the annotation
         if (!paramToCheck.isEmpty()) {
-            Object paramValue = getParameterValueByName((ProceedingJoinPoint) joinPoint, paramToCheck);
+            // FIX: Removed (ProceedingJoinPoint) cast
+            Object rawValue = getParameterValueByName(joinPoint, paramToCheck);
 
-            if (paramValue == null) {
+            if (rawValue == null) {
                 throw new BusinessRuleViolationException("Security parameter '" + paramToCheck + "' not found");
             }
-        }
 
+            String warehouseId = rawValue.toString();
+
+            Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id " + warehouseId + " not found"));
+
+            if (!user.getWarehouse().getId().equals(warehouse.getId())) {
+                    throw new BusinessRuleViolationException("You do not have rights for this warehouse.");
+            }
+        }
     }
 
-    private Object getParameterValueByName(ProceedingJoinPoint joinPoint, String paramName) {
+    private Object getParameterValueByName(JoinPoint joinPoint, String paramName) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String[] parameterNames = signature.getParameterNames();
         Object[] args = joinPoint.getArgs();
@@ -68,7 +90,6 @@ public class RoleCheckAspect {
                 return args[i];
             }
         }
-        return null; // Parameter not found
+        return null;
     }
-
 }

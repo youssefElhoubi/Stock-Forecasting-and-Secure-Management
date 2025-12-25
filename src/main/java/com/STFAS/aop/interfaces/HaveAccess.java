@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HaveAccess {
     String id() default "";
+    String warehouseID() default "";
 }
