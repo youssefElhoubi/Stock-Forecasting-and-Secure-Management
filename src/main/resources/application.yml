@@ -10,3 +10,4 @@ server:
 app:
   jwtSecret: ${APP_JWT_SECRET}
   jwtExpirationMs: ${APP_JWT_EXPIRATION_MS:86400000}
+
