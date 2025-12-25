@@ -17,7 +17,6 @@ import java.util.List;
 public class ProductService implements ProductServiceInterface {
 
     private final ProductRepository productRepository;
-    private final WarehouseService warehouseService;
     private final ProductMapper productMapper;
 
     @Override
