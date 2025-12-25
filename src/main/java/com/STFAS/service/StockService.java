@@ -34,28 +34,39 @@ public class StockService implements StockServiceInterface {
         stock.setWarehouse(warehouse);
         stock.setProduct(product);
 
-        stockRepository.save(stock);
-        return null;
+        return stockMapper.toDto(stockRepository.save(stock));
     }
 
     @Override
-    public StockResponseDto updateStock(StockRequestDto request) {
-        return null;
+    public StockResponseDto updateStock(String id,StockRequestDto request) {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found"));
+
+        stock.setProduct(productRepository.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
+        stock.setWarehouse(warehouseRepository.findById(request.getWarehouseId()).orElseThrow(() -> new ResourceNotFoundException("wareHouse not found")));
+        stock.setQuantityAvailable(request.getQuantityAvailable());
+
+
+        return stockMapper.toDto(stockRepository.save(stock));
     }
 
     @Override
     public StockResponseDto getStockByProductAndWarehouse(String productId, String warehouseId) {
-        return null;
+        Stock stock = stockRepository.findByProduct_IdAndWarehouse_Id(productId, warehouseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Stock not found for this product in the specified warehouse"));
+
+        return stockMapper.toDto(stock);
     }
 
     @Override
     public List<StockResponseDto> getStocksByWarehouse(String warehouseId) {
-        return List.of();
+        List<Stock> stocks =stockRepository.findAll().stream().filter((s)->s.getWarehouse().getId().equals(warehouseId)).toList();
+        return stocks.stream().map(stockMapper::toDto).toList();
     }
 
     @Override
     public List<StockResponseDto> getAllStocks() {
-        return List.of();
+        List<Stock> stocks =stockRepository.findAll();
+        return stocks.stream().map(stockMapper::toDto).toList();
     }
 
     @Override
