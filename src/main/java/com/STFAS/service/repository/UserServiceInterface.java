@@ -1,6 +1,7 @@
 package com.STFAS.service.repository;
 
 import com.STFAS.dto.auth.request.SignUpRequestDto;
+import com.STFAS.dto.auth.response.AuthResponseDto;
 import com.STFAS.dto.auth.response.UserInfoDto;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface UserServiceInterface {
      * Access: ADMIN only.
      * Logic: Encrypts password, sets default active status.
      */
-    UserInfoDto createUser(SignUpRequestDto request);
+    AuthResponseDto createUser(SignUpRequestDto request);
 
     /**
      * Assigns a specific Warehouse to a Manager.
