@@ -40,20 +40,20 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<UserInfoDto> getUserByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
-    }
+//    @GetMapping("/email")
+//    public ResponseEntity<UserInfoDto> getUserByEmail(@RequestParam String email) {
+//        return ResponseEntity.ok(userService.getUserByEmail(email));
+//    }
 
     @GetMapping
     public ResponseEntity<List<UserInfoDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/managers")
-    public ResponseEntity<List<UserInfoDto>> getAllManagers() {
-        return ResponseEntity.ok(userService.getAllManagers());
-    }
+//    @GetMapping("/managers")
+//    public ResponseEntity<List<UserInfoDto>> getAllManagers() {
+//        return ResponseEntity.ok(userService.getAllManagers());
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserInfoDto> updateUser(

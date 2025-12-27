@@ -66,4 +66,19 @@ public class StockService {
     public Stock getStockById(String id) {
         return stockRepository.findById(id).orElseThrow(() -> new RuntimeException("Stock not found"));
     }
+
+    public List<Stock> getAllStocks(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getRole() == Role.ADMIN) {
+            return stockRepository.findAll();
+        } else if (user.getRole() == Role.GESTIONNAIRE) {
+            if (user.getWarehouse() == null) {
+                return List.of(); // Or throw exception
+            }
+            return stockRepository.findByWarehouseId(user.getWarehouse().getId());
+        }
+        return List.of();
+    }
 }
