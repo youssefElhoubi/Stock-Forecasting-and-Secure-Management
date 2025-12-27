@@ -1,10 +1,10 @@
 package com.STFAS.controller;
 
-import com.STFAS.dto.stock.request.StockRequestDto;
-import com.STFAS.entity.Stock;
+import com.STFAS.dto.sales.request.SaleRequestDto;
+import com.STFAS.entity.SalesHistory;
 import com.STFAS.entity.User;
 import com.STFAS.repository.UserRepository;
-import com.STFAS.service.StockService;
+import com.STFAS.service.SalesHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,35 +14,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/stocks")
+@RequestMapping("/api/sales-history")
 @RequiredArgsConstructor
-public class StockController {
+public class SalesHistoryController {
 
-    private final StockService stockService;
+    private final SalesHistoryService salesHistoryService;
     private final UserRepository userRepository;
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Stock> updateStock(
-            @PathVariable String id,
-            @RequestBody StockRequestDto request
-    ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-
-        return ResponseEntity.ok(stockService.updateStock(id, request.getQuantityAvailable(), user.getId()));
-    }
-
-    public ResponseEntity<List<Stock>> getStocksByWarehouse(@PathVariable String warehouseId) {
-        return ResponseEntity.ok(stockService.getStocksByWarehouse(warehouseId));
-    }
-
     @GetMapping
-    public ResponseEntity<List<Stock>> getAllStocks() {
+    public ResponseEntity<List<SalesHistory>> getHistory() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(stockService.getAllStocks(user.getId()));
+        return ResponseEntity.ok(salesHistoryService.getHistory(user.getId()));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> recordSale(@RequestBody SaleRequestDto request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        salesHistoryService.recordSale(request, user.getId());
+        return ResponseEntity.ok().build();
     }
 }
