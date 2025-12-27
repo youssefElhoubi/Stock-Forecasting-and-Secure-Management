@@ -1,6 +1,6 @@
 package com.STFAS.enums;
 
 public enum Role {
-    USER,
+    GESTIONNAIRE,
     ADMIN
 }

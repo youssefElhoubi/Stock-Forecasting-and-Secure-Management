@@ -38,8 +38,10 @@ public class AuthService implements Auth {
         String token = jwtUtils.generateToken(authentication);
 
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
-        if (user.getRole() == Role.USER && dto.getWarehouse() != null) {
-            user.setWarehouse(warehouseRepository.findById(dto.getWarehouse()).orElseThrow(() -> new RuntimeException("Warehouse not found")));
+        if (user.getRole() == Role.GESTIONNAIRE && dto.getWarehouse() != null) {
+            // Warehouse assignment should not happen during login for security/logic reasons as per requirements
+            // user.setWarehouse(...) logic removed.
+            // If the user needs warehouse info, it should be already in the user object or fetched separately.
         }
 
         AuthResponseDto responseDto = userMapper.toAuthResponseDto(user);
@@ -49,16 +51,7 @@ public class AuthService implements Auth {
         return responseDto;
     }
 
-    @Override
-    public AuthResponseDto signup(SignUpRequestDto authRequestDto) {
-        if (userRepository.findByEmail(authRequestDto.getEmail()).isPresent()) {
-            throw new RuntimeException("User with email already exists");
-        }
-        User user = userMapper.toEntity(authRequestDto);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return userMapper.toAuthResponseDto(user);
-    }
+
 
     @Override
     public UserInfoDto getUserInfo(String id) {
