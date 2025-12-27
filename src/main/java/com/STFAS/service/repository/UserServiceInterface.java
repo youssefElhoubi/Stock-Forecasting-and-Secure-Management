@@ -13,7 +13,7 @@ public interface UserServiceInterface {
      * Access: ADMIN only.
      * Logic: Encrypts password, sets default active status.
      */
-    AuthResponseDto createUser(SignUpRequestDto request);
+    UserInfoDto createUser(SignUpRequestDto request);
 
     /**
      * Assigns a specific Warehouse to a Manager.

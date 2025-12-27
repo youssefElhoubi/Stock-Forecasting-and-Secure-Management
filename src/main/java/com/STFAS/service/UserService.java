@@ -1,8 +1,8 @@
 package com.STFAS.service;
 
 import com.STFAS.dto.auth.request.SignUpRequestDto;
-import com.STFAS.dto.auth.response.AuthResponseDto;
 import com.STFAS.dto.auth.response.UserInfoDto;
+//import com.STFAS.dto.auth.response.UserInfoDto;
 import com.STFAS.entity.User;
 import com.STFAS.entity.Warehouse;
 import com.STFAS.enums.Role;
@@ -26,16 +26,23 @@ public class UserService implements UserServiceInterface {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final WarehouseRepository warehouseRepository;
+
+
+
     @Override
-    public AuthResponseDto createUser(SignUpRequestDto request) {
+    public UserInfoDto createUser(SignUpRequestDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("User with email already exists");
         }
         User user = userMapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        if (request.getRole() == null) {
+            user.setRole(Role.GESTIONNAIRE);
+        }
         userRepository.save(user);
-        return userMapper.toAuthResponseDto(user);
+        return userMapper.toUserInfoDto(user);
     }
+
 
     @Override
     public void assignWarehouseToUser(String userId, String warehouseId) {
@@ -65,7 +72,7 @@ public class UserService implements UserServiceInterface {
     @Override
     public List<UserInfoDto> getAllManagers() {
         List<User> users = userRepository.findAll();
-        return  users.stream().filter((u)->u.getRole()== Role.USER).map(userMapper::toUserInfoDto).toList();
+        return  users.stream().filter((u)->u.getRole()== Role.GESTIONNAIRE).map(userMapper::toUserInfoDto).toList();
     }
 
     @Override

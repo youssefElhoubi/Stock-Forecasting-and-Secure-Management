@@ -8,7 +8,7 @@ server:
   port: ${SERVER_PORT:8082}
 
 app:
-  jwtSecret: ${APP_JWT_SECRET}
+  jwtSecret: ${APP_JWT_SECRET:sqbddsjvqfhjskhlfdskjlhfdlskqgfsldbfhkdskflhsdhklfsqdhkfgqhsdklfhk}
   jwtExpirationMs: ${APP_JWT_EXPIRATION_MS:86400000}
 
 springdoc:

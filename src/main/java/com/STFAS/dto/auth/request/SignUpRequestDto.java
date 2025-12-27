@@ -24,8 +24,5 @@ public class SignUpRequestDto {
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-
-    // Optional: You might want to default this to USER in your service logic
-    // instead of letting the user pick it here.
     private Role role;
 }

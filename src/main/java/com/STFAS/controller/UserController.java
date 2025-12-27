@@ -4,6 +4,7 @@ import com.STFAS.dto.auth.request.SignUpRequestDto;
 import com.STFAS.dto.auth.response.AuthResponseDto;
 import com.STFAS.dto.auth.response.UserInfoDto;
 import com.STFAS.service.repository.UserServiceInterface;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,12 @@ public class UserController {
     private final UserServiceInterface userService;
 
     @PostMapping
-    public ResponseEntity<AuthResponseDto> createUser(@RequestBody SignUpRequestDto request) {
+    public ResponseEntity<UserInfoDto> createUser(
+            @RequestBody @Valid SignUpRequestDto request
+    ) {
         return ResponseEntity.ok(userService.createUser(request));
     }
+
 
     @PutMapping("/{userId}/warehouse/{warehouseId}")
     public ResponseEntity<Void> assignWarehouseToUser(
