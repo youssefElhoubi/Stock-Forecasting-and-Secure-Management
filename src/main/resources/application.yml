@@ -11,3 +11,11 @@ app:
   jwtSecret: ${APP_JWT_SECRET}
   jwtExpirationMs: ${APP_JWT_EXPIRATION_MS:86400000}
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    operations-sorter: alpha
+    default-models-expand-depth: 1
