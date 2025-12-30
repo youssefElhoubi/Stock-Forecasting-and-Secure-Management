@@ -9,6 +9,8 @@ import com.STFAS.repository.ProductRepository;
 import com.STFAS.service.repository.ProductServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -46,13 +48,13 @@ public class ProductService implements ProductServiceInterface {
         Product product =productRepository.findById(id).orElseThrow(() -> {
             throw new BusinessRuleViolationException("Product already exists");
         });
-        return productMapper.toDto(product);
+        return sanitizeProductResponse(productMapper.toDto(product));
     }
 
     @Override
     public List<ProductResponseDto> getAllProducts() {
         List<Product> products =productRepository.findAll();
-        return products.stream().map(productMapper::toDto).toList();
+        return products.stream().map(productMapper::toDto).map(this::sanitizeProductResponse).toList();
     }
 
     @Override
@@ -66,6 +68,15 @@ public class ProductService implements ProductServiceInterface {
     @Override
     public List<ProductResponseDto> getProductsByCategory(String category) {
         List<Product> products =productRepository.findByCategory(category);
-        return products.stream().map(productMapper::toDto).toList();
+        return products.stream().map(productMapper::toDto).map(this::sanitizeProductResponse).toList();
+    }
+
+    private ProductResponseDto sanitizeProductResponse(ProductResponseDto dto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_GESTIONNAIRE"))) {
+            dto.setPurchasePrice(null);
+            dto.setMargin(null);
+        }
+        return dto;
     }
 }

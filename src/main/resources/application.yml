@@ -8,6 +8,14 @@ server:
   port: ${SERVER_PORT:8082}
 
 app:
-  jwtSecret: ${APP_JWT_SECRET}
+  jwtSecret: ${APP_JWT_SECRET:sqbddsjvqfhjskhlfdskjlhfdlskqgfsldbfhkdskflhsdhklfsqdhkfgqhsdklfhk}
   jwtExpirationMs: ${APP_JWT_EXPIRATION_MS:86400000}
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    operations-sorter: alpha
+    default-models-expand-depth: 1

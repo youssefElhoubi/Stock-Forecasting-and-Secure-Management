@@ -41,12 +41,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<ProductResponseDto>> getProductsByCategory(
-            @PathVariable String category
-    ) {
-        return ResponseEntity.ok(productService.getProductsByCategory(category));
-    }
+//    @GetMapping("/category/{category}")
+//    public ResponseEntity<List<ProductResponseDto>> getProductsByCategory(
+//            @PathVariable String category
+//    ) {
+//        return ResponseEntity.ok(productService.getProductsByCategory(category));
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
