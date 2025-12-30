@@ -39,4 +39,21 @@ public class SalesHistoryController {
         salesHistoryService.recordSale(request, user.getId());
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/warehouse/{id}")
+    public ResponseEntity<List<SalesHistory>> getSalesByWarehouse(@PathVariable String id) {
+        return ResponseEntity.ok(salesHistoryService.getHistoryByWarehouseId(id));
+    }
+
+
+    @GetMapping("/my-warehouse")
+    public ResponseEntity<List<SalesHistory>> getMyWarehouseSales() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getWarehouse() == null) {
+            return ResponseEntity.ok(List.of());
+        }
+        return ResponseEntity.ok(salesHistoryService.getHistoryByWarehouseId(user.getWarehouse().getId()));
+    }
 }

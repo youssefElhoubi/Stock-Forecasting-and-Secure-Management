@@ -1,4 +1,4 @@
-package com.STFAS.dto.salesHistory.response;
+package com.STFAS.dto.sales.response;
 
 import lombok.Data;
 

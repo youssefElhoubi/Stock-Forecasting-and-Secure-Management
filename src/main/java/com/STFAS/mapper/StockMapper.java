@@ -9,13 +9,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {ProductMapper.class})
 public interface StockMapper {
 
-    // For Request, we usually need to fetch the Product/Warehouse from DB manually
-    // inside the Service, so we often don't map Request->Entity purely in MapStruct
-    // when using @DBRef unless we write custom logic.
-    // Keeping it simple here:
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "product", ignore = true) // Handled in Service
-    @Mapping(target = "warehouse", ignore = true) // Handled in Service
+    @Mapping(target = "product", ignore = true)
+    @Mapping(target = "warehouse", ignore = true)
     Stock toEntity(StockRequestDto dto);
 
     @Mapping(source = "warehouse.name", target = "warehouseName")

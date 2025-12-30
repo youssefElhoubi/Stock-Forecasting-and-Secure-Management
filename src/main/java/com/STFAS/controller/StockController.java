@@ -21,6 +21,25 @@ public class StockController {
     private final StockService stockService;
     private final UserRepository userRepository;
 
+    @GetMapping
+    public ResponseEntity<List<Stock>> getAllStocks() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok(stockService.getAllStocks(user.getId()));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Stock> getStockById(@PathVariable String id) {
+        return ResponseEntity.ok(stockService.getStockById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<Stock> createStock(@RequestBody StockRequestDto request) {
+        return ResponseEntity.ok(stockService.createStock(request));
+    }
+
+
     @PatchMapping("/{id}")
     public ResponseEntity<Stock> updateStock(
             @PathVariable String id,
@@ -37,12 +56,5 @@ public class StockController {
         return ResponseEntity.ok(stockService.getStocksByWarehouse(warehouseId));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Stock>> getAllStocks() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(stockService.getAllStocks(user.getId()));
-    }
 }

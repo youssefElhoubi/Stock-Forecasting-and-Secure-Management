@@ -23,6 +23,6 @@ public class Forecast {
 
     private LocalDate forecastDate;
     private int predictedQuantity30Days;
-    private double confidenceLevel; // e.g., 85.5%
+    private double confidenceLevel;
     private String recommendation;
 }

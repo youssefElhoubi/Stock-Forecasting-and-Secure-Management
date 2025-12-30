@@ -1,23 +1,20 @@
 package com.STFAS.service.repository;
 
 import com.STFAS.dto.stock.request.StockRequestDto;
-import com.STFAS.dto.stock.response.StockResponseDto;
+import com.STFAS.entity.Stock;
 
 import java.util.List;
 
 public interface StockServiceInterface {
 
-    StockResponseDto updateStock(StockRequestDto request);
+    Stock updateStock(String stockId, int newQuantity, String userId);
 
-    StockResponseDto create(StockRequestDto request);
+    List<Stock> getStocksByWarehouse(String warehouseId);
 
-    StockResponseDto getStockByProductAndWarehouse(String productId, String warehouseId);
+    Stock getStockById(String id);
 
-    List<StockResponseDto> getStocksByWarehouse(String warehouseId);
+    List<Stock> getAllStocks(String userId);
 
-    List<StockResponseDto> getAllStocks();
-
-    List<StockResponseDto> getLowStockAlerts(String warehouseId);
-
-    void adjustStockQuantity(String productId, String warehouseId, int quantityChange);
+    Stock createStock(StockRequestDto request);
 }
+

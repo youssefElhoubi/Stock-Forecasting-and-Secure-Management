@@ -17,12 +17,11 @@ public class Product {
     private String description;
     private String category;
 
-    private Double sellingPrice; // Visible to all
+    private Double sellingPrice;
 
-    // Stored as Encrypted Strings in DB
     private String encryptedPurchasePrice;
     private String encryptedMargin;
 
     private Double weight;
-    private String unit; // kg, liter, unit
+    private String unit;
 }

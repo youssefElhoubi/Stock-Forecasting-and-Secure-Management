@@ -22,14 +22,16 @@ public class WarehouseController {
         return ResponseEntity.ok(warehouseService.createWarehouse(warehouse));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<WarehouseResponseDto> update(@PathVariable String id, @RequestBody WarehouseUpdateRequest warehouse) {
-        return ResponseEntity.ok(warehouseService.updateWarehouse(id, warehouse));
-    }
     @GetMapping("all")
     public ResponseEntity<List<WarehouseResponseDto>> all(){
         return ResponseEntity.ok(warehouseService.getAllWarehouses());
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<WarehouseResponseDto> update(@PathVariable String id, @RequestBody WarehouseUpdateRequest warehouse) {
+        return ResponseEntity.ok(warehouseService.updateWarehouse(id, warehouse));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable String id) {
         warehouseService.deleteWarehouse(id);
