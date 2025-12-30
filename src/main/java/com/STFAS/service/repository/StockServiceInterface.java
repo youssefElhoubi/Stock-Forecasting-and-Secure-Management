@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StockServiceInterface {
 
-    StockResponseDto updateStock(StockRequestDto request);
+    StockResponseDto updateStock(String id,StockRequestDto request);
 
     StockResponseDto create(StockRequestDto request);
 

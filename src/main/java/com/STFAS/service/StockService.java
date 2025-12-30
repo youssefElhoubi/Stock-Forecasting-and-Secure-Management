@@ -1,84 +1,81 @@
 package com.STFAS.service;
 
-import com.STFAS.entity.SalesHistory;
+import com.STFAS.dto.stock.request.StockRequestDto;
+import com.STFAS.dto.stock.response.StockResponseDto;
+import com.STFAS.entity.Product;
 import com.STFAS.entity.Stock;
-import com.STFAS.entity.User;
-import com.STFAS.enums.Role;
-import com.STFAS.repository.SaleHistoryRepository;
+import com.STFAS.entity.Warehouse;
+import com.STFAS.exception.ResourceNotFoundException;
+import com.STFAS.mapper.StockMapper;
+import com.STFAS.repository.ProductRepository;
 import com.STFAS.repository.StockRepository;
-import com.STFAS.repository.UserRepository;
+import com.STFAS.repository.WarehouseRepository;
+import com.STFAS.service.repository.StockServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StockService {
-
+public class StockService implements StockServiceInterface {
     private final StockRepository stockRepository;
-    private final SaleHistoryRepository saleHistoryRepository;
-    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final StockMapper stockMapper;
+    private final WarehouseRepository warehouseRepository;
 
-    @Transactional
-    public Stock updateStock(String stockId, int newQuantity, String userId) {
-        Stock stock = stockRepository.findById(stockId)
-                .orElseThrow(() -> new RuntimeException("Stock not found"));
+    @Override
+    public StockResponseDto create(StockRequestDto request) {
+        Stock stock = stockMapper.toEntity(request);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId()).orElseThrow(() -> new ResourceNotFoundException("Warehouse not found"));
 
-        // Security Check for GESTIONNAIRE
-        if (user.getRole() == Role.GESTIONNAIRE) {
-            if (user.getWarehouse() == null || !user.getWarehouse().getId().equals(stock.getWarehouse().getId())) {
-                throw new RuntimeException("Access Denied: You can only manage your own warehouse.");
-            }
-        }
+        stock.setWarehouse(warehouse);
+        stock.setProduct(product);
 
-        int oldQuantity = stock.getQuantityAvailable();
-        if (newQuantity < oldQuantity) {
-            // Record Sale
-            int quantitySold = oldQuantity - newQuantity;
-            SalesHistory history = new SalesHistory();
-            history.setProduct(stock.getProduct());
-            history.setWarehouse(stock.getWarehouse());
-            history.setSaleDate(LocalDateTime.now());
-            history.setQuantitySold(quantitySold);
-            
-            // Set calculated fields for AI
-            history.setDayOfWeek(history.getSaleDate().getDayOfWeek().toString());
-            history.setMonth(history.getSaleDate().getMonth().toString());
-            history.setYear(history.getSaleDate().getYear());
-
-            saleHistoryRepository.save(history);
-        }
-
-        stock.setQuantityAvailable(newQuantity);
-        return stockRepository.save(stock);
+        return stockMapper.toDto(stockRepository.save(stock));
     }
 
-    public List<Stock> getStocksByWarehouse(String warehouseId) {
-        return stockRepository.findByWarehouseId(warehouseId);
-    }
-    
-    public Stock getStockById(String id) {
-        return stockRepository.findById(id).orElseThrow(() -> new RuntimeException("Stock not found"));
+    @Override
+    public StockResponseDto updateStock(String id,StockRequestDto request) {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found"));
+
+        stock.setProduct(productRepository.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
+        stock.setWarehouse(warehouseRepository.findById(request.getWarehouseId()).orElseThrow(() -> new ResourceNotFoundException("wareHouse not found")));
+        stock.setQuantityAvailable(request.getQuantityAvailable());
+
+
+        return stockMapper.toDto(stockRepository.save(stock));
     }
 
-    public List<Stock> getAllStocks(String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    @Override
+    public StockResponseDto getStockByProductAndWarehouse(String productId, String warehouseId) {
+        Stock stock = stockRepository.findByProduct_IdAndWarehouse_Id(productId, warehouseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Stock not found for this product in the specified warehouse"));
 
-        if (user.getRole() == Role.ADMIN) {
-            return stockRepository.findAll();
-        } else if (user.getRole() == Role.GESTIONNAIRE) {
-            if (user.getWarehouse() == null) {
-                return List.of(); // Or throw exception
-            }
-            return stockRepository.findByWarehouseId(user.getWarehouse().getId());
-        }
+        return stockMapper.toDto(stock);
+    }
+
+    @Override
+    public List<StockResponseDto> getStocksByWarehouse(String warehouseId) {
+        List<Stock> stocks =stockRepository.findAll().stream().filter((s)->s.getWarehouse().getId().equals(warehouseId)).toList();
+        return stocks.stream().map(stockMapper::toDto).toList();
+    }
+
+    @Override
+    public List<StockResponseDto> getAllStocks() {
+        List<Stock> stocks =stockRepository.findAll();
+        return stocks.stream().map(stockMapper::toDto).toList();
+    }
+
+    @Override
+    public List<StockResponseDto> getLowStockAlerts(String warehouseId) {
         return List.of();
+    }
+
+    @Override
+    public void adjustStockQuantity(String productId, String warehouseId, int quantityChange) {
+
     }
 }
