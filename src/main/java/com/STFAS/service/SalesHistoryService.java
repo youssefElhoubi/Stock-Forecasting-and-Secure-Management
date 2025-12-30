@@ -1,7 +1,6 @@
 package com.STFAS.service;
 
 import com.STFAS.dto.sales.request.SaleRequestDto;
-import com.STFAS.dto.stock.request.StockRequestDto;
 import com.STFAS.entity.SalesHistory;
 import com.STFAS.entity.Stock;
 import com.STFAS.entity.User;
@@ -57,13 +56,8 @@ public class SalesHistoryService implements SalesHistoryServiceInterface {
         if (newQuantity < 0) {
             throw new RuntimeException("Insufficient stock");
         }
-        StockRequestDto dto = new StockRequestDto().builder()
-                .productId(stock.getProduct().getId())
-                .quantityAvailable(newQuantity)
-                .warehouseId(stock.getWarehouse().getId())
-                .build();
         
-        stockService.updateStock(stock.getId(), dto);
+        stockService.updateStock(stock.getId(), newQuantity, userId);
     }
 
     @Override
