@@ -1,5 +1,6 @@
 package com.STFAS.controller;
 
+import com.STFAS.aop.interfaces.HaveAccess;
 import com.STFAS.dto.Warehouse.request.WarehouseRequestDto;
 import com.STFAS.dto.Warehouse.request.WarehouseUpdateRequest;
 import com.STFAS.dto.Warehouse.response.WarehouseResponseDto;
@@ -23,6 +24,7 @@ public class WarehouseController {
     }
 
     @PatchMapping("/{id}")
+    @HaveAccess(id = "id")
     public ResponseEntity<WarehouseResponseDto> update(@PathVariable String id, @RequestBody WarehouseUpdateRequest warehouse) {
         return ResponseEntity.ok(warehouseService.updateWarehouse(id, warehouse));
     }
@@ -31,6 +33,7 @@ public class WarehouseController {
         return ResponseEntity.ok(warehouseService.getAllWarehouses());
     }
     @DeleteMapping("/{id}")
+    @HaveAccess(id = "id")
     public ResponseEntity<String> delete(@PathVariable String id) {
         warehouseService.deleteWarehouse(id);
         return ResponseEntity.ok("warehouse was deleted");
