@@ -1,5 +1,6 @@
 package com.STFAS.controller;
 
+import com.STFAS.aop.interfaces.HaveAccess;
 import com.STFAS.dto.stock.request.StockRequestDto;
 import com.STFAS.dto.stock.response.StockResponseDto;
 import com.STFAS.service.repository.StockServiceInterface;
@@ -24,13 +25,14 @@ public class StockController {
     }
 
     @PutMapping("/{id}")
+    @HaveAccess(id = "id")
     public ResponseEntity<StockResponseDto> updateStock(
             @PathVariable String id,
             @RequestBody StockRequestDto request
     ) {
         return ResponseEntity.ok(stockService.updateStock(id, request));
     }
-
+    @HaveAccess(id = "warehouseId")
     @GetMapping("/product/{productId}/warehouse/{warehouseId}")
     public ResponseEntity<StockResponseDto> getStockByProductAndWarehouse(
             @PathVariable String productId,
@@ -40,7 +42,7 @@ public class StockController {
                 stockService.getStockByProductAndWarehouse(productId, warehouseId)
         );
     }
-
+    @HaveAccess(id = "warehouseId")
     @GetMapping("/warehouse/{warehouseId}")
     public ResponseEntity<List<StockResponseDto>> getStocksByWarehouse(
             @PathVariable String warehouseId
@@ -52,7 +54,7 @@ public class StockController {
     public ResponseEntity<List<StockResponseDto>> getAllStocks() {
         return ResponseEntity.ok(stockService.getAllStocks());
     }
-
+    @HaveAccess(id = "id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStock(@PathVariable String id) {
         // Optional: add delete method in service later
