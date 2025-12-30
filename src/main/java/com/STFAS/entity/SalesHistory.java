@@ -24,7 +24,6 @@ public class SalesHistory {
     private LocalDateTime saleDate;
     private int quantitySold;
 
-    // Calculated fields for easier AI processing
     private String dayOfWeek;
     private String month;
     private int year;

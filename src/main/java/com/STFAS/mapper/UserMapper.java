@@ -11,8 +11,6 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     User toEntity(SignUpRequestDto dto);
-
     UserInfoDto toUserInfoDto(User user);
-
     AuthResponseDto toAuthResponseDto(User user);
 }

@@ -12,7 +12,6 @@ public class ProductResponseDto {
     private Double weight;
     private String unit;
 
-    // These will be NULL if the user is a MANAGER
     private Double purchasePrice;
     private Double margin;
 }

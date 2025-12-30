@@ -1,7 +1,6 @@
 package com.STFAS.service;
 
 import com.STFAS.dto.auth.request.AuthRequestDto;
-import com.STFAS.dto.auth.request.SignUpRequestDto;
 import com.STFAS.dto.auth.response.AuthResponseDto;
 import com.STFAS.dto.auth.response.UserInfoDto;
 import com.STFAS.entity.User;
@@ -39,10 +38,7 @@ public class AuthService implements Auth {
 
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
         if (user.getRole() == Role.GESTIONNAIRE && dto.getWarehouse() != null) {
-            // Warehouse assignment should not happen during login for security/logic reasons as per requirements
-            // user.setWarehouse(...) logic removed.
-            // If the user needs warehouse info, it should be already in the user object or fetched separately.
-        }
+           }
 
         AuthResponseDto responseDto = userMapper.toAuthResponseDto(user);
 

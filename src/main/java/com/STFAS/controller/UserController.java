@@ -25,14 +25,9 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(request));
     }
 
-
-    @PutMapping("/{userId}/warehouse/{warehouseId}")
-    public ResponseEntity<Void> assignWarehouseToUser(
-            @PathVariable String userId,
-            @PathVariable String warehouseId
-    ) {
-        userService.assignWarehouseToUser(userId, warehouseId);
-        return ResponseEntity.ok().build();
+    @GetMapping
+    public ResponseEntity<List<UserInfoDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
@@ -40,20 +35,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-//    @GetMapping("/email")
-//    public ResponseEntity<UserInfoDto> getUserByEmail(@RequestParam String email) {
-//        return ResponseEntity.ok(userService.getUserByEmail(email));
-//    }
-
-    @GetMapping
-    public ResponseEntity<List<UserInfoDto>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
-
-//    @GetMapping("/managers")
-//    public ResponseEntity<List<UserInfoDto>> getAllManagers() {
-//        return ResponseEntity.ok(userService.getAllManagers());
-//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserInfoDto> updateUser(
@@ -68,4 +49,17 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @PutMapping("/{userId}/warehouse/{warehouseId}")
+    public ResponseEntity<Void> assignWarehouseToUser(
+            @PathVariable String userId,
+            @PathVariable String warehouseId
+    ) {
+        userService.assignWarehouseToUser(userId, warehouseId);
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }
