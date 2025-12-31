@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:secret@localhost:27017/SFASM_QA?authSource=admin
+
+  ai:
+    ollama:
+      base-url: http://qa-host:11434
+      chat:
+        options:
+          model: llama3
+          temperature: 0.2
+
+app:
+  jwtSecret: qa-secret-key

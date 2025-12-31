@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:secret@localhost:27017/SFASM_DEV?authSource=admin
+
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3
+          temperature: 0.1
+
+app:
+  jwtSecret: dev-secret-key
