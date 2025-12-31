@@ -1,15 +1,15 @@
-
 services:
 
   app:
     build: .
     container_name: SFASM
     ports:
-      - "${SERVER_PORT}:8082"
+      - "${SERVER_PORT}:8083"
     env_file:
       - .env
     depends_on:
       - mongodb
+      - ollama
     restart: unless-stopped
 
   mongodb:
@@ -27,5 +27,15 @@ services:
       - mongo-data:/data/db
     restart: unless-stopped
 
+  ollama:
+    image: ollama/ollama
+    container_name: SFASM-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
 volumes:
   mongo-data:
+  ollama-data:
