@@ -30,6 +30,7 @@ jobs:
         run: mvn clean test
         env:
           SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/testdb
+          OLLAMA_BASE_URL: http://localhost:11434
 
 #      - name: Build Docker image
 #        run: docker build -t Stock-app .
