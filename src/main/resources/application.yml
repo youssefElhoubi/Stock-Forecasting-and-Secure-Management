@@ -1,24 +1,14 @@
 spring:
   application:
     name: StockForecastingAndSecureManagement
-  data:
-    mongodb:
-      uri: mongodb://root:secret@localhost:27017/SFASM?authSource=admin
-
-  ai:
-    ollama:
-      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
-      chat:
-        options:
-          model: llama3
-          temperature: 0.1
+  profiles:
+    active: dev
 
 server:
-  port: ${SERVER_PORT:8083}
+  port: 8083
 
 app:
-  jwtSecret: ${APP_JWT_SECRET:sqbddsjvqfhjskhlfdskjlhfdlskqgfsldbfhkdskflhsdhklfsqdhkfgqhsdklfhk}
-  jwtExpirationMs: ${APP_JWT_EXPIRATION_MS:86400000}
+  jwtExpirationMs: 86400000
 
 springdoc:
   api-docs:
