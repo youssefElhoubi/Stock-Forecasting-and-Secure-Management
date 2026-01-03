@@ -257,8 +257,8 @@ class UserServiceTest {
         adminInfoDto.setRole(Role.ADMIN);
 
         when(userRepository.findAll()).thenReturn(List.of(user, admin));
-        when(userMapper.toUserInfoDto(user)).thenReturn(userInfoDto);
-        when(userMapper.toUserInfoDto(admin)).thenReturn(adminInfoDto);
+        lenient().when(userMapper.toUserInfoDto(user)).thenReturn(userInfoDto);
+        lenient().when(userMapper.toUserInfoDto(admin)).thenReturn(adminInfoDto);
 
         // Act
         List<UserInfoDto> result = userService.getAllManagers();
@@ -276,7 +276,7 @@ class UserServiceTest {
         User admin = new User();
         admin.setRole(Role.ADMIN);
         when(userRepository.findAll()).thenReturn(List.of(admin));
-        when(userMapper.toUserInfoDto(admin)).thenReturn(new UserInfoDto());
+        lenient().when(userMapper.toUserInfoDto(admin)).thenReturn(new UserInfoDto());
 
         // Act
         List<UserInfoDto> result = userService.getAllManagers();

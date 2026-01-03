@@ -134,9 +134,9 @@ class ForecastingServiceTest {
         when(saleHistoryRepository.findAll()).thenReturn(List.of(salesHistory));
         when(stockRepository.findByWarehouseId("warehouse-123")).thenReturn(List.of(stock));
         Prompt mockPrompt = mock(Prompt.class);
-        when(stockPromptTemplate.create(any(java.util.Map.class))).thenReturn(mockPrompt);
+        lenient().when(stockPromptTemplate.create(any(java.util.Map.class))).thenReturn(mockPrompt);
         mockOllamaChatResponse();
-        when(forecastRepository.save(any(Forecast.class))).thenReturn(forecast);
+        lenient().when(forecastRepository.save(any(Forecast.class))).thenReturn(forecast);
 
         // Act
         assertDoesNotThrow(() -> forecastingService.generateForecasts());
