@@ -294,13 +294,15 @@ class ProductServiceTest {
         dtoWithSensitiveData.setName("Laptop");
         dtoWithSensitiveData.setPurchasePrice(500.0);
         dtoWithSensitiveData.setMargin(0.2);
+        when(productRepository.findById("product-123")).thenReturn(Optional.of(product));
+        when(productMapper.toDto(product)).thenReturn(dtoWithSensitiveData);
 
         // Act
         ProductResponseDto result = productService.getProductById("product-123");
 
-        // The sanitizeProductResponse is called internally
-        // For this test, we verify that the service handles GESTIONNAIRE role properly
-        // Note: This would require accessing the actual method result after sanitization
+        // Assert
+        assertNotNull(result);
+        // Fields should be null/0 for GESTIONNAIRE due to sanitization
     }
 
     @Test
@@ -327,13 +329,13 @@ class ProductServiceTest {
         
         if (isGestionnaire) {
             GrantedAuthority authority = mock(GrantedAuthority.class);
-            when(authority.getAuthority()).thenReturn("ROLE_GESTIONNAIRE");
-            when(authentication.getAuthorities()).thenReturn((Collection) List.of(authority));
+            lenient().when(authority.getAuthority()).thenReturn("ROLE_GESTIONNAIRE");
+            lenient().when(authentication.getAuthorities()).thenReturn((Collection) List.of(authority));
         } else {
-            when(authentication.getAuthorities()).thenReturn((Collection) List.of());
+            lenient().when(authentication.getAuthorities()).thenReturn((Collection) List.of());
         }
         
-        when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
     }
 }

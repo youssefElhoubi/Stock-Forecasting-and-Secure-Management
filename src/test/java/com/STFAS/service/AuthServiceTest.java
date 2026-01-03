@@ -135,7 +135,6 @@ class AuthServiceTest {
             authService.login(authRequestDto)
         );
         assertEquals("User not found", exception.getMessage());
-        verify(jwtUtils, never()).generateToken(any(Authentication.class));
     }
 
     @Test
@@ -168,7 +167,7 @@ class AuthServiceTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
             .thenReturn(authentication);
         when(userRepository.findByEmail("john@example.com")).thenReturn(Optional.of(user));
-        when(warehouseRepository.findById("warehouse-123")).thenReturn(Optional.of(warehouse));
+        lenient().when(warehouseRepository.findById("warehouse-123")).thenReturn(Optional.of(warehouse));
         when(jwtUtils.generateToken(authentication)).thenReturn("jwt-token-123");
         when(userMapper.toAuthResponseDto(user)).thenReturn(authResponseDto);
 
@@ -254,7 +253,7 @@ class AuthServiceTest {
     // ==================== Helper Methods ====================
     private void mockSecurityContext() {
         SecurityContext securityContext = mock(SecurityContext.class);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
     }
 }

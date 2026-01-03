@@ -96,7 +96,7 @@ class SalesHistoryServiceTest {
     void testRecordSaleSuccess() {
         // Arrange
         when(stockRepository.findByWarehouseId("warehouse-123")).thenReturn(List.of(stock));
-        doNothing().when(stockService).updateStock("stock-123", 90, "admin-user");
+        lenient().when(stockService.updateStock("stock-123", 90, "admin-user")).thenReturn(stock);
 
         // Act
         salesHistoryService.recordSale(saleRequestDto, "admin-user");
@@ -140,7 +140,7 @@ class SalesHistoryServiceTest {
         // Arrange
         saleRequestDto.setQuantitySold(100); // Exact available quantity
         when(stockRepository.findByWarehouseId("warehouse-123")).thenReturn(List.of(stock));
-        doNothing().when(stockService).updateStock("stock-123", 0, "admin-user");
+        lenient().when(stockService.updateStock("stock-123", 0, "admin-user")).thenReturn(stock);
 
         // Act
         salesHistoryService.recordSale(saleRequestDto, "admin-user");
@@ -155,7 +155,7 @@ class SalesHistoryServiceTest {
         // Arrange
         saleRequestDto.setQuantitySold(0);
         when(stockRepository.findByWarehouseId("warehouse-123")).thenReturn(List.of(stock));
-        doNothing().when(stockService).updateStock("stock-123", 100, "admin-user");
+        lenient().when(stockService.updateStock("stock-123", 100, "admin-user")).thenReturn(stock);
 
         // Act
         salesHistoryService.recordSale(saleRequestDto, "admin-user");
